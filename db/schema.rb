@@ -10,7 +10,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_17_040238) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_17_162953) do
+  create_table "survey_assignments", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "survey_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["survey_id"], name: "index_survey_assignments_on_survey_id"
+    t.index ["user_id"], name: "index_survey_assignments_on_user_id"
+  end
+
+  create_table "survey_questions", force: :cascade do |t|
+    t.string "label"
+    t.string "data_type"
+    t.text "info"
+    t.string "status"
+    t.integer "survey_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["survey_id"], name: "index_survey_questions_on_survey_id"
+  end
+
+  create_table "surveys", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -22,4 +49,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_17_040238) do
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "survey_assignments", "surveys"
+  add_foreign_key "survey_assignments", "users"
+  add_foreign_key "survey_questions", "surveys"
 end

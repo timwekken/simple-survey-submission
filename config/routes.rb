@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :survey_assignments
+  resources :survey_questions
+  resources :surveys
   devise_for :users, path: '', path_names: { 
     sign_in: 'login',
     sign_out: 'logout',
