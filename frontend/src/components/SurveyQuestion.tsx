@@ -1,3 +1,4 @@
+import { SurveyQuestionType } from "@/types/survey";
 import {
   Field,
   Input,
@@ -7,14 +8,8 @@ import {
   NativeSelect,
 } from "@chakra-ui/react";
 
-export interface SurveyQuestionType {
-  id: number;
-  label: string;
-  info: string;
-  data_type: string;
-}
-
-const options = [
+// Temporary options to demonstrate the component
+const TEMP_OPTIONS = [
   { label: "Option 1", value: "1" },
   { label: "Option 2", value: "2" },
   { label: "Option 3", value: "3" },
@@ -22,26 +17,27 @@ const options = [
 
 interface SurveyQuestionProps {
   question: SurveyQuestionType;
-  canAnswer: boolean;
-  canEdit: boolean;
+  response: string;
+  setResponse: (response: string) => void;
+  viewOnly: boolean;
 }
 
 const SurveyQuestion = ({
   question,
-  canAnswer,
-  canEdit,
+  response,
+  setResponse,
+  viewOnly,
 }: SurveyQuestionProps) => {
   const { label, info, data_type } = question;
-  console.log(question);
-
-  const setValue = (value: unknown) => {
-    console.log(value);
-  };
 
   const renderInput = () => {
     if (data_type === "checkbox") {
       return (
-        <Checkbox.Root disabled={!canAnswer}>
+        <Checkbox.Root
+          checked={response === "true"}
+          onCheckedChange={(e) => setResponse(e.checked as string)}
+          disabled={viewOnly}
+        >
           <Checkbox.HiddenInput />
           <Checkbox.Control />
         </Checkbox.Root>
@@ -50,12 +46,12 @@ const SurveyQuestion = ({
     if (data_type === "radio") {
       return (
         <RadioGroup.Root
-          value={""}
-          onValueChange={(e) => setValue(e.value)}
-          disabled={!canAnswer}
+          value={response as string}
+          onValueChange={(e) => setResponse(e.value as string)}
+          disabled={viewOnly}
         >
           <HStack gap="6">
-            {options.map((option) => (
+            {TEMP_OPTIONS.map((option) => (
               <RadioGroup.Item key={option.value} value={option.value}>
                 <RadioGroup.ItemHiddenInput />
                 <RadioGroup.ItemIndicator />
@@ -68,10 +64,17 @@ const SurveyQuestion = ({
     }
     if (data_type === "select") {
       return (
-        <NativeSelect.Root disabled={!canAnswer}>
-          <NativeSelect.Field>
-            {options.map((option) => (
-              <option key={option.value} value={option.value}>
+        <NativeSelect.Root>
+          <NativeSelect.Field
+            value={response}
+            onChange={(e) => setResponse(e.target.value as string)}
+          >
+            {TEMP_OPTIONS.map((option) => (
+              <option
+                key={option.value}
+                value={option.value}
+                disabled={viewOnly}
+              >
                 {option.label}
               </option>
             ))}
@@ -80,7 +83,14 @@ const SurveyQuestion = ({
         </NativeSelect.Root>
       );
     }
-    return <Input type={data_type} disabled={!canAnswer} />;
+    return (
+      <Input
+        type={data_type}
+        disabled={viewOnly}
+        value={response}
+        onChange={(e) => setResponse(e.target.value as string)}
+      />
+    );
   };
 
   return (

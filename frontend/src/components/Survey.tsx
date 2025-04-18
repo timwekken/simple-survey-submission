@@ -1,44 +1,35 @@
 import { useEffect, useState } from "react";
 import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react";
-import SurveyQuestion, { SurveyQuestionType } from "./SurveyQuestion";
-
-export interface SurveyType {
-  id: number;
-  title: string;
-  description: string;
-  questions?: SurveyQuestionType[];
-}
+import { SurveyType, SurveyQuestionType } from "@/types/survey";
+import api from "../utils/api";
+import SurveyQuestion from "./SurveyQuestion";
 
 export interface SurveyProps {
   survey: SurveyType;
-  canAnswer: boolean;
-  canEdit: boolean;
+  viewOnly: boolean;
   surveyIsOpen: boolean;
   closeOpenSurvey: () => void;
 }
 
 const Survey = ({
   survey,
-  canAnswer,
-  canEdit,
+  viewOnly,
   surveyIsOpen,
   closeOpenSurvey,
 }: SurveyProps) => {
   const [questions, setQuestions] = useState<SurveyQuestionType[] | null>([]);
-
-  console.log(survey);
+  const [responses, setResponses] = useState<Record<number, string>>({});
 
   useEffect(() => {
     const fetchSurveyQuestions = async (id: number) => {
       try {
-        const response = await fetch(
-          `http://localhost:5000/survey_questions/by_survey/${id}`
-        );
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        const surveyQuestions = await api.getSurveyQuestionsById(id);
+        setQuestions(surveyQuestions);
+        const surveyResponses = await api.getSurveyResponses(id);
+        // TODO: Call above functions asynchronously
+        if (surveyResponses) {
+          setResponses(surveyResponses.response_data);
         }
-        const data = await response.json();
-        setQuestions(data);
       } catch (error) {
         console.error("Error fetching survey:", error);
       }
@@ -48,12 +39,26 @@ const Survey = ({
     }
   }, [survey?.id]);
 
-  const onOpenChange = () => {
-    //TODO: HANDLE SUBMIT
+  const submitSurvey = () => {
+    api.submitSurveyResponse(survey?.id, responses);
+    onOpenChange();
+  };
 
+  const onOpenChange = () => {
     closeOpenSurvey();
+    setResponses({});
     setQuestions(null);
   };
+
+  const updateResponse = (questionId: number, response: string) => {
+    const updatedResponses = {
+      ...responses,
+      [questionId]: response,
+    };
+    setResponses(updatedResponses);
+  };
+
+  console.log("RES", responses);
 
   return (
     <Dialog.Root
@@ -78,8 +83,11 @@ const Survey = ({
                 <SurveyQuestion
                   key={question?.id}
                   question={question}
-                  canAnswer={canAnswer}
-                  canEdit={canEdit}
+                  response={responses[question.id] || ""}
+                  setResponse={(response: string) =>
+                    updateResponse(question?.id, response)
+                  }
+                  viewOnly={viewOnly}
                 />
               ))}
             </Dialog.Body>
@@ -87,8 +95,7 @@ const Survey = ({
               <Dialog.ActionTrigger asChild>
                 <Button variant="outline">Cancel</Button>
               </Dialog.ActionTrigger>
-              {canAnswer && <Button>Submit</Button>}
-              {canEdit && <Button>Save Changes</Button>}
+              {!viewOnly && <Button onClick={submitSurvey}>Submit</Button>}
             </Dialog.Footer>
             <Dialog.CloseTrigger asChild>
               <CloseButton size="sm" />
