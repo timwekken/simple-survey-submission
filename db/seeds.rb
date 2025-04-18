@@ -5,7 +5,7 @@
 require 'faker'
 
 statuses = ["new", "assigned", "completed"]
-data_types = ["text", "number", "boolean", "date", "select", "radio", "checkbox"]
+data_types = ["text", "number", "boolean", "select", "radio", "checkbox"]
 
 # Clear old data
 SurveyAssignment.destroy_all
@@ -29,9 +29,9 @@ surveys.each do |survey|
   rand(3..7).times do
     SurveyQuestion.create!(
         survey: survey,
-        label: Faker::Commerce.product_name() + " " + Faker::Lorem.word.capitalize,
+        label: Faker::Commerce.product_name() + " " + Faker::Lorem.word.capitalize + "?",
         data_type: data_types.sample,
-        info: Faker::Lorem.sentence(word_count: 12) + "?",
+        info: Faker::Lorem.sentence(word_count: 12),
         status: statuses.sample
     )
   end

@@ -36,6 +36,9 @@ gem "rack-cors"
 gem "devise"
 gem "jsonapi-serializer"
 
+# Search
+gem 'ransack'
+
 # Use foreman for running frontend/api at same time
 gem 'foreman', require: false
 

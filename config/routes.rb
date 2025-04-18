@@ -1,7 +1,16 @@
 Rails.application.routes.draw do
-  resources :survey_assignments
-  resources :survey_questions
+  resources :survey_assignments do
+    collection do
+      post 'create_or_update', to: 'survey_assignments#create_or_update_assignment'
+    end
+  end
+  resources :survey_questions do
+    collection do
+      get 'by_survey/:survey_id', to: 'survey_questions#by_survey'
+    end
+  end
   resources :surveys
+  resources :users
   devise_for :users, path: '', path_names: { 
     sign_in: 'login',
     sign_out: 'logout',

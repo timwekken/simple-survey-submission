@@ -1,13 +1,27 @@
 class SurveysController < ApplicationController
     # GET /surveys
     def index
-        @surveys = Survey.all
-        render json: @surveys
+        @q = Survey.ransack(params[:q])
+        @surveys = @q.result(distinct: true).includes(survey_assignment: :user)
+        render json: @surveys.as_json(
+            include: {
+                survey_assignment: {
+                    include: {
+                        user: { only: [:id, :email] }
+                    },
+                }
+            }
+        )
     end
 
     # GET /survey/1
     def show
-        render json: @survey
+        @survey = Survey.find(params[:id])
+        if @survey
+            render json: @survey
+        else
+            render json: { error: "Survey not found" }, status: :not_found
+        end
     end
 
     # POST /surveys
@@ -31,6 +45,14 @@ class SurveysController < ApplicationController
 
     # DELETE /surveys/1
     def destroy
-        @survey.destroy
+        survey_id = params[:id]
+        @survey = Survey.find(survey_id)
+        @survey_questions = SurveyQuestion.where(survey_id: survey_id)
+
+        if @survey_questions.destroy_all && @survey.destroy
+            render json: { message: 'Survey successfully deleted' }, status: :ok
+        else
+            render json: { error: 'Failed to delete survey or associated questions' }, status: :unprocessable_entity
+        end
     end
 end
