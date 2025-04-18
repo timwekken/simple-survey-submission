@@ -1,24 +1,37 @@
-# README
+# Caveats
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+I wasn't able to complete everything I wanted to, especially tests.
 
-Things you may want to cover:
+# Functionality
 
-* Ruby version
+# Assumptions
 
-* System dependencies
+- Not responsive
+- Future scale issues not addressed
+- Environment variables
+- String responses only
 
-* Configuration
+# Running Locally
 
-* Database creation
+Install dependencies on the backend:  
+`bundle install`
 
-* Database initialization
+Run the migration:
+`rails db:migrate`
 
-* How to run the test suite
+Install dependencies on the frontend:  
+`cd frontend`  
+`npm install`
 
-* Services (job queues, cache servers, search engines, etc.)
+Head back to the root directory:
+`cd ..`
 
-* Deployment instructions
+Seed db:  
+`rails db:seed`
 
-* ...
+Start project:  
+`foreman start -f Procfile.dev`
+
+App should now be running at `http://localhost:5173/`
+
+# Precreated Users to use

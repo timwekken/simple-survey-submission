@@ -38,13 +38,13 @@ gem "jsonapi-serializer"
 gem "devise-jwt"
 
 # Roles
-gem 'pundit'
+gem "pundit"
 
 # Search
-gem 'ransack'
+gem "ransack"
 
 # Use foreman for running frontend/api at same time
-gem 'foreman', require: false
+gem "foreman", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -57,5 +57,5 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # Seed data generator
-  gem 'faker'
+  gem "faker"
 end
