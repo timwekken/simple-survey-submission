@@ -1,6 +1,7 @@
 class SurveyQuestionPolicy < ApplicationPolicy
   def by_survey?
-    true
+    return true if user.admin? || user.manager?
+    return false
   end
 
   def index?
@@ -8,7 +9,8 @@ class SurveyQuestionPolicy < ApplicationPolicy
   end
   
   def show?
-    true
+    return true if user.admin? || user.manager?
+    return false
   end
   
   def create?

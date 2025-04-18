@@ -4,7 +4,8 @@ class SurveyPolicy < ApplicationPolicy
   end
   
   def show?
-    true
+    return true if user.admin? || user.manager?
+    return false
   end
   
   def create?
@@ -13,6 +14,7 @@ class SurveyPolicy < ApplicationPolicy
   
   def update?
     admin? || manager?
+  end
   
   def destroy?
     admin?

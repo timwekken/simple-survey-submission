@@ -11,10 +11,14 @@ data_types = ["text", "number", "boolean", "select", "radio", "checkbox"]
 SurveyAssignment.destroy_all
 SurveyQuestion.destroy_all
 Survey.destroy_all
-# User.destroy_all
+User.destroy_all
 
 # Create users
-# TODO: Add these
+User.create(email:"admin@test.com", password:"password", role: :admin)
+User.create(email:"manager@test.com", password:"password", role: :manager)
+User.create(email:"first_user@test.com", password:"password", role: :user)
+User.create(email:"second_user@test.com", password:"password", role: :user)
+User.create(email:"another_user@test.com", password:"password", role: :user)
 
 # Create surveys
 surveys = 10.times.map do

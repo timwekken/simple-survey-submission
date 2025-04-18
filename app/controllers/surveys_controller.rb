@@ -1,8 +1,15 @@
 class SurveysController < ApplicationController
+
+    before_action :authenticate_user!
+
     # GET /surveys
     def index
         @q = Survey.ransack(params[:q])
         @surveys = @q.result(distinct: true).includes(survey_assignment: :user)
+        puts "Current user role: #{current_user.role}"
+        if current_user.role != 'admin' && current_user.role != 'manager'
+            @surveys = @surveys.where(survey_assignment: { user_id: current_user.id })
+        end
         render json: @surveys.as_json(
             include: {
                 survey_assignment: {

@@ -35,6 +35,7 @@ gem "rack-cors"
 # Auth
 gem "devise"
 gem "jsonapi-serializer"
+gem "devise-jwt"
 
 # Roles
 gem 'pundit'

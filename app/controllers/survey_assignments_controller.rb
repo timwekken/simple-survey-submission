@@ -1,5 +1,7 @@
 class SurveyAssignmentsController < ApplicationController
 
+    before_action :authenticate_user!
+
     # POST /survey_assignments
     def create_or_update_assignment
         puts "Creating or updating assignment with params: #{params.inspect}"

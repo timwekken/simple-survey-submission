@@ -29,8 +29,18 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   def respond_with(resource, _opts = {})
+    # Get the user details for the response
+    user_data = UserSerializer.new(resource).serializable_hash[:data][:attributes]
+    
+    # Retrieve the JWT from the Bearer header that devise-jwt adds
+    token = request.env['warden-jwt_auth.token']
+
+    puts token
+    puts "--------"
+
     render json: {
       status: { code: 200, message: 'Logged in successfully.' },
+      token: token,
       data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
     }, status: :ok
   end
