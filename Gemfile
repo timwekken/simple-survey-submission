@@ -36,6 +36,9 @@ gem "rack-cors"
 gem "devise"
 gem "jsonapi-serializer"
 
+# Roles
+gem 'pundit'
+
 # Search
 gem 'ransack'
 

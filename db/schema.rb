@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_17_162953) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_18_043817) do
   create_table "survey_assignments", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "survey_id", null: false
@@ -46,6 +46,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_17_162953) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "role"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

@@ -17,6 +17,7 @@ class SurveysController < ApplicationController
     # GET /survey/1
     def show
         @survey = Survey.find(params[:id])
+        authorize @survey
         if @survey
             render json: @survey
         else
@@ -27,6 +28,7 @@ class SurveysController < ApplicationController
     # POST /surveys
     def create
         @survey = Survey.new(survey_params)
+        authorize @survey
         if @survey.save
             render json: @survey, status: :created, location: @survey
         else
@@ -36,6 +38,8 @@ class SurveysController < ApplicationController
 
     # PATCH/PUT /surveys/1
     def update
+        @survey = Survey.find(params[:id])
+        authorize @survey
         if @survey.update(survey_params)
             render json: @survey
         else
@@ -47,6 +51,7 @@ class SurveysController < ApplicationController
     def destroy
         survey_id = params[:id]
         @survey = Survey.find(survey_id)
+        authorize @survey
         @survey_questions = SurveyQuestion.where(survey_id: survey_id)
 
         if @survey_questions.destroy_all && @survey.destroy
